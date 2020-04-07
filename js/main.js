@@ -7,16 +7,28 @@ $(document).ready(function () {
      };
 
 
-     mesiDiVendita = []
+     leMieVendite = {
+
+     }
 
      $.ajax(settings).done(function (response) {
-       for (var i = 0; i < response.length; i++) {
-           var venditaSingola = response[i];
-           var dataVendita = venditaSingola.date;
-          var tempo = moment(dataVendita, "DD-MM-YYYY");
-          mesiDiVendita.push(tempo.month());
-          }
+            for (var i = 0; i < response.length; i++) {
+                var venditaSingolaGenerale = response[i];
+                var dataVendita = venditaSingolaGenerale.date;
+                var tempo = moment(dataVendita, "DD-MM-YYYY"); //uso moment
+                var mese = tempo.format('MMMM');
+                var venditeMonetarie = venditaSingolaGenerale.amount
+                var venditeMonetarieCorrette = parseInt(venditeMonetarie);
+                console.log(venditeMonetarieCorrette);
+                if (leMieVendite[mese] === undefined) {
+                    leMieVendite[mese] = 0;
+               }
+               leMieVendite[mese] += venditeMonetarieCorrette;
+               console.log(leMieVendite);
+
+               }
      });
-     console.log(mesiDiVendita);
+     // console.log(mesiDiVendita);
+     // console.log(moment.months());
 
 });
