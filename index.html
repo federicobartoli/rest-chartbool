@@ -5,6 +5,7 @@
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <link rel="stylesheet" href="css/style.css">
           <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+          <script src="js/main.js" charset="utf-8"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" charset="utf-8"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/it.js" charset="utf-8"></script>
           <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -12,8 +13,10 @@
      </head>
      <body>
           <div class="container-fluid">
-               <canvas id="grafico-delle-vendite"></canvas>
+               <div class="canvas-container">
+                    <canvas id="grafico-delle-vendite"></canvas>
+                    <canvas id="graficotorta-delle-vendite"></canvas>
+               </div>
           </div>
-     <script src="js/main.js" charset="utf-8"></script>
      </body>
 </html>
