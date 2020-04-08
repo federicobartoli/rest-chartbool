@@ -6,13 +6,19 @@
 
 .container-fluid {
      font-family: sans-serif;
-     width: 100vw;
-     height: 100vh;
      display: flex;
      justify-content: center;
      align-items: center;
      flex-direction: column;
 }
+
+.container{
+     width: 100vw;
+     height: 100vh;
+     text-align: center;
+     font-family: sans-serif;
+}
+
 
 .canvas-container {
      width:400px;
