@@ -26,13 +26,50 @@ $(document).ready(function () {
           }
      });
 
+     $('input[type=submit]').click(function () {
+          if($('#venditori').val() != undefined && $('#soldi').val() != 0 && $('#date').val()!= 0){
+               var nomeVenditore = $('#venditori').val();
+               var dataOperazione= $('#date').val(); //!!!!!Data presa da input da non utilizzare!!!
+               var importoOperazione= parseInt($('#soldi').val());
+               //-----Passaggio per prendere un formato giusto della data------
+               var dataArray = dataOperazione.split('-');
+               var arrayRev = dataArray.reverse();
+               var dataCorretta = arrayRev.join("/");
+               //-------------Fine------------
+
+               //----INIZIO CHIAMATA AJAX------
+               var settings = {
+               "url": "http://157.230.17.132:4001/sales/",
+               "method": "POST",
+               "timeout": 0,
+               "headers": {
+                 "Content-Type": "application/json"
+               },
+               "data": JSON.stringify({"salesman":nomeVenditore,"amount":importoOperazione,"date":dataCorretta}),
+};
+
+          $.ajax(settings).done(function (response) {
+          console.log(response);
+          //----FINE CHIAMATA AJAX------
+          });
 
 
+
+          }else {
+               alert('Componi il form in maniera corretta')
+          }
+     })
+
+     // id: 1
+     // salesman: "Marco"
+     // amount: 9000
+     // date: "12/02/2017"
 
      function costruttoreDati(response) {
           for (var i = 0; i < response.length; i++) {
                var venditaSingolaGenerale = response[i];
                var dataVendita = venditaSingolaGenerale.date;
+               console.log(venditaSingolaGenerale);
                var tempo = moment(dataVendita, "DD-MM-YYYY"); //uso moment
                var mese = tempo.format('M');
                var rappresentante = venditaSingolaGenerale.salesman
