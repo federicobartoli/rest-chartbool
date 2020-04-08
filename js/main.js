@@ -3,28 +3,9 @@ $(document).ready(function () {
      var leMieVendite = {};
      var venditeRappresentanti = {};
      var totaleVendite = 0;
-     $.ajax({
-          url: "http://157.230.17.132:4001/sales",
-          method: 'GET',
-          success: function(response){
-               var costruttore = costruttoreDati(response);
-               creoGrafico('line','#grafico-delle-vendite',costruttore.mesiDiVendita , costruttore.datiVenditeMxM);
-          },
-          error: function(){
-               alert('errore');
-          }
-     });
-     $.ajax({
-          url: "http://157.230.17.132:4001/sales",
-          method: 'GET',
-          success: function(response){
-               var costruttore = costruttoreDati(response);
-               creoGrafico('pie','#graficotorta-delle-vendite',costruttore.rappresentantiNomi , costruttore.datiRappNomi);
-          },
-          error: function(){
-               alert('errore');
-          }
-     });
+
+     ajaxStart();
+     ajaxStart();
 
      $('input[type=submit]').click(function () {
           if($('#venditori').val() != undefined && $('#soldi').val() != 0 && $('#date').val()!= 0){
@@ -48,11 +29,11 @@ $(document).ready(function () {
                "data": JSON.stringify({"salesman":nomeVenditore,"amount":importoOperazione,"date":dataCorretta}),
 };
 
-          $.ajax(settings).done(function (response) {
+          $.ajax(settings).done(function (risposta) {
+          ajaxStart();
           console.log(response);
           //----FINE CHIAMATA AJAX------
           });
-
 
 
           }else {
@@ -65,11 +46,45 @@ $(document).ready(function () {
      // amount: 9000
      // date: "12/02/2017"
 
+     function ajaxStart() {
+          $('.canvas-container').empty();
+          $.ajax({
+               url: "http://157.230.17.132:4001/sales",
+               method: 'GET',
+               success: function(response){
+                    var costruttore = costruttoreDati(response);
+                    $('.canvas-container').append('<canvas id="grafico-delle-vendite"></canvas>')
+                    creoGrafico('line','#grafico-delle-vendite',costruttore.mesiDiVendita , costruttore.datiVenditeMxM);
+               },
+               error: function(){
+                    alert('errore');
+               }
+          });
+          $.ajax({
+               url: "http://157.230.17.132:4001/sales",
+               method: 'GET',
+               success: function(response){
+                    var costruttore = costruttoreDati(response);
+                    console.log(costruttore);
+                    $('.canvas-container').append('<canvas id="graficotorta-delle-vendite"></canvas>')
+                    creoGrafico('pie','#graficotorta-delle-vendite',costruttore.rappresentantiNomi , costruttore.datiRappNomi);
+               },
+               error: function(){
+                    alert('errore');
+               }
+          });
+     }
+
+
      function costruttoreDati(response) {
+          leMieVendite = {};
+          var mesiDiVendita = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+          var datiVenditeMxM = [];
+          var rappresentantiNomi = [];
+          var datiRappNomi = [];
           for (var i = 0; i < response.length; i++) {
                var venditaSingolaGenerale = response[i];
                var dataVendita = venditaSingolaGenerale.date;
-               console.log(venditaSingolaGenerale);
                var tempo = moment(dataVendita, "DD-MM-YYYY"); //uso moment
                var mese = tempo.format('M');
                var rappresentante = venditaSingolaGenerale.salesman
@@ -87,19 +102,14 @@ $(document).ready(function () {
                leMieVendite[mese] += venditeMonetarieCorrette;
           }
 
-          var mesiDiVendita = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-          var datiVenditeMxM = [];
-          var rappresentantiNomi = [];
-          var datiRappNomi = [];
           for (var key in venditeRappresentanti) {
                rappresentantiNomi.push(key);
                var n = (venditeRappresentanti[key]/totaleVendite * 100).toFixed(2);
-               console.log(n);
                datiRappNomi.push(n);
           }
 
           for (var chiave in leMieVendite) {
-               datiVenditeMxM.push(leMieVendite[chiave])
+               datiVenditeMxM.push(leMieVendite[chiave]) // ..
           }
           return {
                mesiDiVendita: mesiDiVendita,
